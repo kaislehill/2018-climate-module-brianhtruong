@@ -35,8 +35,10 @@ ggplot(co2, aes(x = decimal_date, y = average)) + geom_line()
 ```
 
 Which months are the CO2 values at the maximum? Minimum?  Why is this?
+C02 values are at the maximum at the end of winter/start of summer (around May). C02 values are at the minimum at the end of summer/start of winter (around September). This trend is due to the periodicity of photosynthesis of plants.
 
 What rolling average is used in computing the "trend" line?  How does the trend depend on the rolling average?
+The rolling average used is monthly averages of C02 concentations in ppm. The trend depends on the rolling average because they are used to plot the y values. 
 
 ------------------------
 
@@ -51,6 +53,8 @@ Data from: <http://climate.nasa.gov/vital-signs/global-temperature>
 Describe the data set to the best of your ability given the documentation provided.  Describe what kind of column each data contains and what units it is measured in.  Then address our three key questions in understanding this data:
 
 - How are the measurements made? What is the associated measurement uncertainty?
+
+
 - What is the resolution of the data?
 - Are their missing values? How should they be handled?
 

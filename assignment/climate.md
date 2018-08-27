@@ -25,26 +25,26 @@ readr::read_table("ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt",
 co2
 ```
 
-    ## # A tibble: 715 x 7
-    ##     year month decimal_date average interpolated  trend  days
-    ##    <int> <int>        <dbl>   <dbl>        <dbl>  <dbl> <int>
-    ##  1  1958     3     1958.208  315.71       315.71 314.62    NA
-    ##  2  1958     4     1958.292  317.45       317.45 315.29    NA
-    ##  3  1958     5     1958.375  317.50       317.50 314.71    NA
-    ##  4  1958     6     1958.458      NA       317.10 314.85    NA
-    ##  5  1958     7     1958.542  315.86       315.86 314.98    NA
-    ##  6  1958     8     1958.625  314.93       314.93 315.94    NA
-    ##  7  1958     9     1958.708  313.20       313.20 315.91    NA
-    ##  8  1958    10     1958.792      NA       312.66 315.61    NA
-    ##  9  1958    11     1958.875  313.33       313.33 315.31    NA
-    ## 10  1958    12     1958.958  314.67       314.67 315.61    NA
-    ## # ... with 705 more rows
+    ## # A tibble: 725 x 7
+    ##     year month decimal_date average interpolated trend  days
+    ##    <int> <int>        <dbl>   <dbl>        <dbl> <dbl> <int>
+    ##  1  1958     3        1958.    316.         316.  315.    NA
+    ##  2  1958     4        1958.    317.         317.  315.    NA
+    ##  3  1958     5        1958.    318.         318.  315.    NA
+    ##  4  1958     6        1958.     NA          317.  315.    NA
+    ##  5  1958     7        1959.    316.         316.  315.    NA
+    ##  6  1958     8        1959.    315.         315.  316.    NA
+    ##  7  1958     9        1959.    313.         313.  316.    NA
+    ##  8  1958    10        1959.     NA          313.  316.    NA
+    ##  9  1958    11        1959.    313.         313.  315.    NA
+    ## 10  1958    12        1959.    315.         315.  316.    NA
+    ## # ... with 715 more rows
 
 ``` r
 ggplot(co2, aes(x = decimal_date, y = average)) + geom_line() 
 ```
 
-![](climate_files/figure-markdown_github-ascii_identifiers/unnamed-chunk-3-1.png)
+![](climate_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
 Which months are the CO2 values at the maximum? Minimum? Why is this?
 
@@ -143,14 +143,14 @@ Exercise IV: Arctic Sea Ice?
 ============================
 
 -   <http://nsidc.org/data/G02135>
--   <ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/Sep/N_09_area.txt>
+-   <ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/daily/data/N_seaice_extent_daily_v3.0.csv>
 
 Question 1:
 -----------
 
 -   Describe the data set: what are the columns and units?
 -   Where do these data come from?
--   What is the uncertainty in measurment? Resolution of the data? Interpretation of missing values?
+-   What is the uncertainty in measurement? Resolution of the data? Interpretation of missing values?
 
 Question 2:
 -----------
