@@ -53,20 +53,35 @@ Data from: <http://climate.nasa.gov/vital-signs/global-temperature>
 Describe the data set to the best of your ability given the documentation provided.  Describe what kind of column each data contains and what units it is measured in.  Then address our three key questions in understanding this data:
 
 - How are the measurements made? What is the associated measurement uncertainty?
-
+They are made through satellite imaging. The associated measurement uncertainty is data prior to this technology.
 
 - What is the resolution of the data?
-- Are their missing values? How should they be handled?
+1951-1980 average
 
+- Are their missing values? How should they be handled?
+No.
 
 ## Question 2:
 
 Construct the necessary R code to import and prepare for manipulation the following data set: <http://climate.nasa.gov/system/internal_resources/details/original/647_Global_Temperature_Data_File.txt>
 
+```{r message=FALSE}
+
+co2_index <- 
+readr::read_tsv("http://climate.nasa.gov/system/internal_resources/details/original/647_Global_Temperature_Data_File.txt", 
+                  comment="#",
+                  col_names = c("year", "annual_mean", "lowess_smoothing"))
+co2_index
+```
+
 
 ## Question 3:
 
 Plot the trend in global mean temperatures over time.  Describe what you see in the plot and how you interpret the patterns you observe.
+```{r}
+ggplot(co2_index, aes(x = year, y = annual_mean)) + geom_line() 
+
+```
 
 
 ## Question 4: Evaluating the evidence for a "Pause" in warming?
