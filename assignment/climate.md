@@ -46,9 +46,9 @@ ggplot(co2, aes(x = decimal_date, y = average)) + geom_line()
 
 ![](climate_files/figure-markdown_github/unnamed-chunk-3-1.png)
 
-Which months are the CO2 values at the maximum? Minimum? Why is this?
+Which months are the CO2 values at the maximum? Minimum? Why is this? C02 values are at the maximum at the end of winter/start of summer (around May). C02 values are at the minimum at the end of summer/start of winter (around September). This trend is due to the periodicity of photosynthesis of plants.
 
-What rolling average is used in computing the "trend" line? How does the trend depend on the rolling average?
+What rolling average is used in computing the "trend" line? How does the trend depend on the rolling average? The rolling average used is monthly averages of C02 concentations in ppm. The trend depends on the rolling average because they are used to plot the y values.
 
 ------------------------------------------------------------------------
 
@@ -64,19 +64,50 @@ Question 1:
 
 Describe the data set to the best of your ability given the documentation provided. Describe what kind of column each data contains and what units it is measured in. Then address our three key questions in understanding this data:
 
--   How are the measurements made? What is the associated measurement uncertainty?
--   What is the resolution of the data?
--   Are their missing values? How should they be handled?
+-   How are the measurements made? What is the associated measurement uncertainty? They are made through satellite imaging and temperature variation/average. The associated measurement uncertainty is data prior to this technology and the calculations used to find the average.
+
+-   What is the resolution of the data? 1951-1980 averages
+
+-   Are their missing values? How should they be handled? Yes data before 1951. Carbon isotopes in ice are used as an indicator for temperature. Change confidence intervals and other statistical methods.
 
 Question 2:
 -----------
 
 Construct the necessary R code to import and prepare for manipulation the following data set: <http://climate.nasa.gov/system/internal_resources/details/original/647_Global_Temperature_Data_File.txt>
 
+``` r
+co2_index <- 
+readr::read_tsv("http://climate.nasa.gov/system/internal_resources/details/original/647_Global_Temperature_Data_File.txt", 
+                  comment="#",
+                  col_names = c("year", "annual_mean", "lowess_smoothing"))
+co2_index
+```
+
+    ## # A tibble: 138 x 3
+    ##     year annual_mean lowess_smoothing
+    ##    <int>       <dbl>            <dbl>
+    ##  1  1880       -0.19            -0.11
+    ##  2  1881       -0.1             -0.14
+    ##  3  1882       -0.1             -0.17
+    ##  4  1883       -0.19            -0.21
+    ##  5  1884       -0.28            -0.24
+    ##  6  1885       -0.31            -0.26
+    ##  7  1886       -0.32            -0.27
+    ##  8  1887       -0.35            -0.27
+    ##  9  1888       -0.18            -0.27
+    ## 10  1889       -0.11            -0.26
+    ## # ... with 128 more rows
+
 Question 3:
 -----------
 
 Plot the trend in global mean temperatures over time. Describe what you see in the plot and how you interpret the patterns you observe.
+
+``` r
+ggplot(co2_index, aes(x = year, y = annual_mean)) + geom_line() 
+```
+
+![](climate_files/figure-markdown_github/unnamed-chunk-5-1.png) Variation in temperature global averages from 1880-2018. General increase after 1945 with slight variations. Stablized average with natural variation before 1945.
 
 Question 4: Evaluating the evidence for a "Pause" in warming?
 -------------------------------------------------------------
@@ -84,8 +115,9 @@ Question 4: Evaluating the evidence for a "Pause" in warming?
 The [2013 IPCC Report](https://www.ipcc.ch/pdf/assessment-report/ar5/wg1/WG1AR5_SummaryVolume_FINAL.pdf) included a tentative observation of a "much smaller increasing trend" in global mean temperatures since 1998 than was observed previously. This led to much discussion in the media about the existence of a "Pause" or "Hiatus" in global warming rates, as well as much research looking into where the extra heat could have gone. (Examples discussing this question include articles in [The Guardian](http://www.theguardian.com/environment/2015/jun/04/global-warming-hasnt-paused-study-finds), [BBC News](http://www.bbc.com/news/science-environment-28870988), and [Wikipedia](https://en.wikipedia.org/wiki/Global_warming_hiatus)).
 
 By examining the data here, what evidence do you find or not find for such a pause? Present an analysis of this data (using the tools & methods we have covered in Foundation course so far) to argue your case.
+We can disprove the 'pause' in global warming by overlaying data from natural weather and climactic events including El Nino, volcanic erruptions, and the ban on aersols including CFC's. If we compared models that included trends with and without the occurence of El Nino years, volcanic erruptions, and the continued effects of emmited aerosols the resuling 'pause' in climate change would be disproved.
 
-What additional analyses or data sources would better help you refine your arguments?
+What additional analyses or data sources would better help you refine your arguments? Showing long term temperature data overlayed with volcanic eruption, El Nino, and/or with/without the effects aerosols.
 
 Question 5: Rolling averages
 ----------------------------
@@ -94,8 +126,51 @@ Question 5: Rolling averages
 -   Construct 5 year averages from the annual data. Construct 10 & 20-year averages.
 -   Plot the different averages and describe what differences you see and why.
 
-Exercise II: Melting Ice Sheets?
-================================
+``` r
+library(zoo)
+```
+
+    ## 
+    ## Attaching package: 'zoo'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     as.Date, as.Date.numeric
+
+``` r
+co2_index_5 <- co2_index %>% 
+  mutate(roll_mean = rollmean(annual_mean, 5, na.pad = T))
+
+co2_index_10 <- co2_index %>% 
+  mutate(roll_mean = rollmean(annual_mean, 10, na.pad = T))
+
+co2_index_20 <- co2_index %>% 
+  mutate(roll_mean = rollmean(annual_mean, 20, na.pad = T))
+```
+
+``` r
+ggplot(co2_index_5, aes(x = year, y = roll_mean)) + geom_line() 
+```
+
+    ## Warning: Removed 4 rows containing missing values (geom_path).
+
+![](climate_files/figure-markdown_github/unnamed-chunk-7-1.png)
+
+``` r
+ggplot(co2_index_10, aes(x = year, y = roll_mean)) + geom_line() 
+```
+
+    ## Warning: Removed 9 rows containing missing values (geom_path).
+
+![](climate_files/figure-markdown_github/unnamed-chunk-8-1.png)
+
+``` r
+ggplot(co2_index_20, aes(x = year, y = roll_mean)) + geom_line() 
+```
+
+    ## Warning: Removed 19 rows containing missing values (geom_path).
+
+![](climate_files/figure-markdown_github/unnamed-chunk-9-1.png) \# Exercise II: Melting Ice Sheets?
 
 -   Data description: <http://climate.nasa.gov/vital-signs/land-ice/>
 -   Raw data file: <http://climate.nasa.gov/system/internal_resources/details/original/499_GRN_ANT_mass_changes.csv>

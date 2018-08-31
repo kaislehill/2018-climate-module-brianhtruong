@@ -53,13 +53,13 @@ Data from: <http://climate.nasa.gov/vital-signs/global-temperature>
 Describe the data set to the best of your ability given the documentation provided.  Describe what kind of column each data contains and what units it is measured in.  Then address our three key questions in understanding this data:
 
 - How are the measurements made? What is the associated measurement uncertainty?
-They are made through satellite imaging. The associated measurement uncertainty is data prior to this technology.
+They are made through satellite imaging and temperature variation/average. The associated measurement uncertainty is data prior to this technology and the calculations used to find the average.
 
 - What is the resolution of the data?
-1951-1980 average
+1951-1980 averages
 
 - Are their missing values? How should they be handled?
-No.
+Yes data before 1951. Carbon isotopes in ice are used as an indicator for temperature. Change confidence intervals and other statistical methods.
 
 ## Question 2:
 
@@ -82,6 +82,7 @@ Plot the trend in global mean temperatures over time.  Describe what you see in 
 ggplot(co2_index, aes(x = year, y = annual_mean)) + geom_line() 
 
 ```
+Variation in temperature global averages from 1880-2018. General increase after 1945 with slight variations. Stablized average with natural variation before 1945. 
 
 
 ## Question 4: Evaluating the evidence for a "Pause" in warming?
@@ -89,8 +90,11 @@ ggplot(co2_index, aes(x = year, y = annual_mean)) + geom_line()
 The [2013 IPCC Report](https://www.ipcc.ch/pdf/assessment-report/ar5/wg1/WG1AR5_SummaryVolume_FINAL.pdf) included a tentative observation of a "much smaller increasing trend" in global mean temperatures since 1998 than was observed previously.  This led to much discussion in the media about the existence of a "Pause" or "Hiatus" in global warming rates, as well as much research looking into where the extra heat could have gone.  (Examples discussing this question include articles in [The Guardian](http://www.theguardian.com/environment/2015/jun/04/global-warming-hasnt-paused-study-finds), [BBC News](http://www.bbc.com/news/science-environment-28870988), and [Wikipedia](https://en.wikipedia.org/wiki/Global_warming_hiatus)). 
 
 By examining the data here, what evidence do you find or not find for such a pause?  Present an analysis of this data (using the tools & methods we have covered in Foundation course so far) to argue your case.  
+We can disprove the 'pause' in global warming by overlaying data from natural weather and climactic events including El Nino, volcanic erruptions, and the ban on aersols including CFC's. If we compared models that included trends with and without the occurence of El Nino years, volcanic erruptions, and the continued effects of emmited aerosols the resuling 'pause' in climate change would be disproved.
 
 What additional analyses or data sources would better help you refine your arguments?
+Showing long term temperature data overlayed with volcanic eruption, El Nino, and/or with/without the effects aerosols.
+
 
 ## Question 5: Rolling averages
     
@@ -99,8 +103,38 @@ What additional analyses or data sources would better help you refine your argum
 - Plot the different averages and describe what differences you see and why.  
 
 
+```{r}
+library(zoo)
+
+co2_index_5 <- co2_index %>% 
+  mutate(roll_mean = rollmean(annual_mean, 5, na.pad = T))
+
+co2_index_10 <- co2_index %>% 
+  mutate(roll_mean = rollmean(annual_mean, 10, na.pad = T))
+
+co2_index_20 <- co2_index %>% 
+  mutate(roll_mean = rollmean(annual_mean, 20, na.pad = T))
 
 
+```
+
+```{r}
+
+ggplot(co2_index_5, aes(x = year, y = roll_mean)) + geom_line() 
+
+```
+
+```{r}
+
+ggplot(co2_index_10, aes(x = year, y = roll_mean)) + geom_line() 
+
+```
+```{r}
+
+ggplot(co2_index_20, aes(x = year, y = roll_mean)) + geom_line() 
+
+```
+They get smoother.
 
 # Exercise II: Melting Ice Sheets?
 
@@ -116,6 +150,16 @@ What additional analyses or data sources would better help you refine your argum
 ## Question 2:
 
 Construct the necessary R code to import this data set as a tidy `Table` object.
+
+```{r}
+
+ice_sheets <- 
+readr::read_csv("http://climate.nasa.gov/system/internal_resources/details/original/499_GRN_ANT_mass_changes.csv", 
+                  skip = 10,
+                  col_names = c("time", "a1_mass", "a2_mass"))
+
+ice_sheets
+```
 
 ## Question 3:
 
