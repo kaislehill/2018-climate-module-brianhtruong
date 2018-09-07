@@ -14,6 +14,7 @@ output: github_document
 - Raw data from <ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt>
 
 ```{r message=FALSE}
+install.packages("zoo")
 library(tidyverse)
 library(zoo)
 ```
