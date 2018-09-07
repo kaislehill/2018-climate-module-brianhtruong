@@ -144,8 +144,9 @@ They get smoother.
 ## Question 1:
 
 - Describe the data set: what are the columns and units? Where do the numbers come from? 
+The data set gives the mass change of the Greenland and Antartica ice sheets beginning in 2002 through 2009. The columns are time, change in Greenland ice mass, and change in Antartica ice mass given in Gt/year. This data comes from the GRACE satelitte 
 - What is the uncertainty in measurment? Resolution of the data? Interpretation of missing values?
-
+The resolution of the data is 2002-2009 and uncertainty in measurement comes from the calculated mean calculated average for the time series. For this resoultion,there is no missing data
 
 ## Question 2:
 
@@ -164,7 +165,10 @@ ice_sheets
 ## Question 3:
 
 Plot the data and describe the trends you observe.
-
+```{r}
+#Plot the data and describe the trends you observe.
+ggplot(ice_sheets,aes(x="time") +geom_point(a1_mass)+geom_point(a2_mass))
+```
 
 
 # Exercise III: Rising Sea Levels?
