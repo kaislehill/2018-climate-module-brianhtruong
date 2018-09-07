@@ -15,6 +15,7 @@ output: github_document
 
 ```{r message=FALSE}
 library(tidyverse)
+library(zoo)
 ```
 
 ```{r message=FALSE}
@@ -104,8 +105,6 @@ Showing long term temperature data overlayed with volcanic eruption, El Nino, an
 
 
 ```{r}
-library(zoo)
-
 co2_index_5 <- co2_index %>% 
   mutate(roll_mean = rollmean(annual_mean, 5, na.pad = T))
 
