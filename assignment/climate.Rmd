@@ -17,6 +17,7 @@ output: github_document
 install.packages("zoo")
 library(tidyverse)
 library(zoo)
+library(lubridate)
 ```
 
 ```{r message=FALSE}
@@ -167,9 +168,9 @@ ice_sheets
 Plot the data and describe the trends you observe.
 ```{r}
 #Plot the data and describe the trends you observe.
-ggplot(ice_sheets,aes(x="time") +geom_point(a1_mass)+geom_point(a2_mass))
+ggplot(ice_sheets, aes(x=time)) + geom_line(aes(y=a1_mass, color='a1')) + geom_line(aes(y=a2_mass))
 ```
-
+Greenland is decreasing at a greater rate than Antarctica
 
 # Exercise III: Rising Sea Levels?
 
@@ -182,17 +183,47 @@ ggplot(ice_sheets,aes(x="time") +geom_point(a1_mass)+geom_point(a2_mass))
 - Describe the data set: what are the columns and units? 
 - Where do these data come from? 
 - What is the uncertainty in measurment? Resolution of the data? Interpretation of missing values?
+1. altimeter type 0=dual-frequency  999=single frequency (ie Poseidon-1) 
+2. merged file cycle # 
+3. year+fraction of year (mid-cycle) 
+4. number of observations 
+5. number of weighted observations 
+6. GMSL (Global Isostatic Adjustment (GIA) not applied) variation (mm) with respect to TOPEX 7. collinear mean reference 
+7. standard deviation of GMSL (GIA not applied) variation estimate (mm) 
+8. smoothed (60-day 8. Gaussian type filter) GMSL (GIA not applied) variation (mm)  
+9. GMSL (Global Isostatic Adjustment (GIA) applied) variation (mm) with respect to TOPEX collinear mean reference 
+10. standard deviation of GMSL (GIA applied) variation estimate (mm)
+11. smoothed (60-day Gaussian type filter) GMSL (GIA applied) variation (mm)
+12. smoothed (60-day Gaussian type filter) GMSL (GIA applied) variation (mm); annual and semi-annual signal removed
+
+Data comes from NASA, coastal tide gauge data, satellite.
+Uncertainty in mean references, variation in mm of sea levels per year.
+1993 - 2016 resolution.
+None.
 
 
 ## Question 2:
 
 Construct the necessary R code to import this data set as a tidy `Table` object.
 
+```{r}
+
+sea_level <- 
+readr::read_table2("http://climate.nasa.gov/system/internal_resources/details/original/121_Global_Sea_Level_Data_File.txt",
+                  skip = 47,
+                  col_names = c("alimeter type", "merged file cycle", "year_fraction_year", "No. observ", "No. weighted observ", "GMSL", "SD GMSL", "GMSL_variation", "SD GMSL variation", "smoothed GMSL var", "smooth GMSL variation w/o yearly signal"))
+
+sea_level
+```
+
 ## Question 3:
 
 Plot the data and describe the trends you observe.
-
-
+```{r}
+#Plot the data and describe the trends you observe.
+ggplot(sea_level, aes(x=year_fraction_year)) + geom_line(aes(y=GMSL)) + geom_line(aes(y=GMSL_variation, col='red'))
+```
+The data shows that mean sea level has increased since 1993
 
 # Exercise IV: Arctic Sea Ice?
 
@@ -203,19 +234,43 @@ Plot the data and describe the trends you observe.
 ## Question 1:
 
 - Describe the data set: what are the columns and units? 
+
+The columns are Year, Month, Day, Extent, Missing, Source Data
+
 - Where do these data come from? 
+NOAA and the National Snow and Ice Data center. Data was collected using sensors
+
 - What is the uncertainty in measurement? Resolution of the data? Interpretation of missing values?
+
+Spatial Resolution is 25km x 25km
+Temporal Resolution 1 day, 1 month
 
 
 ## Question 2:
 
 Construct the necessary R code to import this data set as a tidy `Table` object.
 
+```{r}
+
+ice_level <- 
+readr::read_csv("ftp://sidads.colorado.edu/DATASETS/NOAA/G02135/north/daily/data/N_seaice_extent_daily_v3.0.csv",
+                skip=2,
+                  col_names = c("year", "month", "day", "extent_sq_km", "missing", "source"))
+
+ice_level
+```
+
 ## Question 3:
 
-Plot the data and describe the trends you observe.    
+Plot the data and describe the trends you observe. 
 
+```{r}
+library(lubridate)
 
+ice_level <- mutate(ice_level, date = as.Date(with(ice_level, paste(year, month, day,sep="-")), "%Y-%m-%d"))
+ggplot(ice_level, aes(x=date, y=extent_sq_km)) + geom_line()
+```
+We observe seasonal variation and an overall decrease in Arctic sea ice extent since 1978
 # Exercise V: Longer term trends in CO2 Records
 
 
@@ -232,12 +287,36 @@ Vostok Core, back to 400,000 yrs before present day
 ## Questions / Tasks:
 
 - Describe the data set: what are the columns and units? Where do the numbers come from? 
+The column are depth in meters, age of the ice in years before present, mean age of the air in years before present, and CO2 concentration in parts per million volume. The data comes from ice cores of East Antarctica. Ice was crushed and a historical record of co2 concentration stored in the ice gives the data
 - What is the uncertainty in measurment? Resolution of the data? Interpretation of missing values?
+Missing values- N/A. The temporal resoultion of the data is 417160 to 2342 years before present. Data was collected from the east Antarctica ice core.  
+
 - Read in and prepare data for analysis.
-- Reverse the ordering to create a chronological record.  
+```{r}
+
+longtcarbon <- 
+readr::read_table2("http://cdiac.ornl.gov/ftp/trends/co2/vostok.icecore.co2",
+                skip=21,
+                  col_names = c("depth", "age_ice", "age_air", "co2_concentration"))
+
+longtcarbon
+```
+- Reverse the ordering to create a chronological record. 
+
 - Plot data
+```{r}
+ggplot(longtcarbon, aes(x=desc(age_ice), y=co2_concentration)) + geom_line()
+```
 - Consider various smoothing windowed averages of the data. 
+``` {r}
+ggplot(data = longtcarbon) +
+  geom_smooth(aes(x = desc(age_ice), y=co2_concentration))
+```
 - Join this series to Mauna Loa data
+
+```{r}
+co2_index + 
+```
 - Plot joined data
 - Describe your conclusions
 
