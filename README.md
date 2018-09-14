@@ -1,4 +1,4 @@
-
+authors: Brian and Anna
 
 
 [![Build Status](https://travis-ci.org/espm-157/2018-climate-module-brianhtruong.svg?branch=master)](https://travis-ci.org/espm-157/2018-climate-module-brianhtruong)
