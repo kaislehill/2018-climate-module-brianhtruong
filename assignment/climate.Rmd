@@ -1,6 +1,6 @@
 ---
 title: "Climate Exercise"
-author: "Change to your own names"
+author: "Brian and Anna"
 output: github_document
 ---
 
