@@ -1,6 +1,6 @@
 ---
 title: "Climate Exercise"
-author: "Carl Boettiger & Dana Seidel"
+author: "Change to your own names"
 output: github_document
 ---
 
@@ -14,9 +14,8 @@ output: github_document
 - Raw data from <ftp://aftp.cmdl.noaa.gov/products/trends/co2/co2_mm_mlo.txt>
 
 ```{r message=FALSE}
-install.packages("zoo")
 library(tidyverse)
-library(zoo)
+library(RcppRoll) # remember to install RcppRoll package 
 library(lubridate)
 ```
 
@@ -108,13 +107,13 @@ Showing long term temperature data overlayed with volcanic eruption, El Nino, an
 
 ```{r}
 co2_index_5 <- co2_index %>% 
-  mutate(roll_mean = rollmean(annual_mean, 5, na.pad = T))
+  mutate(roll_mean = roll_mean(x = annual_mean, n = 5, fill = NA))
 
 co2_index_10 <- co2_index %>% 
-  mutate(roll_mean = rollmean(annual_mean, 10, na.pad = T))
+  mutate(roll_mean = roll_mean(x = annual_mean, n = 10, fill = NA))
 
 co2_index_20 <- co2_index %>% 
-  mutate(roll_mean = rollmean(annual_mean, 20, na.pad = T))
+  mutate(roll_mean = roll_mean(x = annual_mean, n = 20, fill = NA))
 
 
 ```
@@ -315,7 +314,7 @@ ggplot(data = longtcarbon) +
 - Join this series to Mauna Loa data
 
 ```{r}
-co2_index + 
+co2_index # remember to finish this code chunk
 ```
 - Plot joined data
 - Describe your conclusions
