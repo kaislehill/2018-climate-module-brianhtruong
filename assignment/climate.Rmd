@@ -322,6 +322,6 @@ ggplot(data = longtcarbon) +
 
 ```
 - Describe your conclusions
-
+CO2 atmosphere concentration rates have rapidly increased within the last few decades relative to the history of Earth.
 
 
