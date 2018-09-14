@@ -310,14 +310,17 @@ ggplot(longtcarbon, aes(x=desc(age_ice), y=co2_concentration)) + geom_line()
 - Consider various smoothing windowed averages of the data. 
 ``` {r}
 ggplot(data = longtcarbon) +
-  geom_smooth(aes(x = desc(age_ice), y=co2_concentration))
+  geom_smooth(aes(x = age_ice, y=co2_concentration))
 ```
 - Join this series to Mauna Loa data
-
-```{r}
-co2_index + 
-```
 - Plot joined data
+
+``` {r}
+ggplot(data = longtcarbon) +
+  geom_smooth(aes(x = age_ice, y=co2_concentration)) +
+  geom_step(data = co2_index, aes(x = year, y = annual_mean))
+
+```
 - Describe your conclusions
 
 
